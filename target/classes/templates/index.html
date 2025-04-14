@@ -1,0 +1,20 @@
+<!--   1/Приветствие USER пользователя  -->
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>Главная страница</title>
+</head>
+<body>
+<h1 th:inline="text">Добро пожаловать, <span sec:authentication="name">Гость</span>!</h1>
+
+<!-- Кнопка перехода на страницу логина -->
+<form th:action="@{/login}">
+    <button type="submit">Войти</button>
+</form>
+<a th:href="@{/registration}">
+    <button type="button">Зарегистрироваться</button>
+</a>
+</body>
+</html>

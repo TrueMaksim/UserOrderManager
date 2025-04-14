@@ -1,0 +1,87 @@
+<!--   4/Список пользователей  -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>Список пользователей</title>
+</head>
+<body>
+<div sec:authorize="hasRole('USER')"> </div>
+<div th:if="${successMessage}" style="color:green;">
+    <span th:text="${successMessage}"></span>
+</div>
+<div th:if="${errorMessage}" style="color: red;">
+    <span th:text="${errorMessage}"></span>
+</div>
+<h1>Пользователи</h1>
+
+<!-- Список пользователей -->
+<ul th:if="${not #lists.isEmpty(users)}">
+    <li th:each="user : ${users}">
+        <span th:text="${user.id}"></span>
+        <span th:text="${user.name}"></span> -
+        <span th:text="${user.birth}"></span> -
+        <span th:text="${user.age}"></span> -
+        <span th:text="${user.email}"></span>
+
+        <!--  Ссылка на  заказы пользователя -->
+        <a th:href="@{/web/users/{userId}/orders(userId=${user.id})}">Просмотреть заказы</a>
+
+        <form th:action="@{/web/users/{userId}/orders(userId=${user.id})}" method="post">
+            <input type="text" name="productName" placeholder="Товар" required>
+            <input type="number" name="price" step="0.01" placeholder="Цена" required>
+            <button type="submit">Добавить заказ</button>
+        </form>
+    </li>
+</ul>
+<p th:if="${#lists.isEmpty(users)}"> Пользователи не найдены</p>
+
+<!--Сообщение если список пуст -->
+<p th:if="${ #lists.isEmpty(users)}"> Пользователи не найдены</p>
+
+<!-- Форма добавления пользователя -->
+<h2>Добавить нового пользователя</h2>
+
+<form th:action="@{/web/add}" th:object="${user}" method="post">
+    <!--  CSRF-токен -->
+    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+    <!-- Поле имени -->
+    <input type="text" th:field="*{name}" placeholder="Имя">
+    <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}" style="color: red"></div>
+
+    <!-- Поле даты рождения -->
+    <input type="date" th:field="*{birth}">
+    <div th:if="${#fields.hasErrors('birth')}" th:errors="*{birth}" style="color: #73ff00"></div>
+
+    <!-- Поле возраста -->
+    <input type="number" th:field="*{age}" placeholder="Возраст">
+    <div th:if="${#fields.hasErrors('age')}" th:errors="*{age}" style="color: #000dff"></div>
+
+    <!-- Поле email -->
+    <input type="email" th:field="*{email}" placeholder="Email">
+    <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}" style="color: #ff6a00"></div>
+
+    <button type="submit">Добавить</button>
+</form>
+
+
+<!-- Форма фильтрации -->
+<form method="get" th:action="@{/web/filter}">
+    <input type="text"
+           name="name"
+           placeholder="Поиск по имени"
+           th:value="${param.name}"/>
+    <button type="submit">Найти</button>
+</form>
+
+<form th:action="@{/}">
+    <button type="submit">Назад</button>
+</form>
+<a th:href="@{/}">
+    <button>На главную</button>
+</a>
+
+
+
+</body>

@@ -1,0 +1,39 @@
+<!--   5/Список заказов  -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!-- Установка кодировки символов -->
+    <meta charset="UTF-8">
+    <title>Заказы пользователя</title>
+</head>
+<body>
+<h1>Заказы пользователя</h1>
+<!-- Ссылка для возврата к списку пользователей -->
+<a th:href="@{/web/users}">
+    <button>← Назад к списку пользователей</button>
+</a>
+
+<!-- проверка на пустой список -->
+<div th:if="${#lists.isEmpty(orders)}">
+    <p>Нет заказов</p>
+</div>
+
+<!-- Таблица заказов (отображается только при наличии данных) -->
+<table th:unless="${#lists.isEmpty(orders)}">
+    <thead>
+    <tr>
+        <th>Товар</th>
+        <th>Цена</th>
+    </tr>
+    </thead>
+    <tbody>
+    <!-- Цикл отображения заказов -->
+    <tr th:each="order : ${orders}">
+        <td th:text="${order.productName}"></td> <!-- Ячейка с названием товара -->
+        <!-- Ячейка с форматированной ценой в рублях -->
+        <td th:text="${#numbers.formatDecimal(order.price, 1, 2)} + ' ₽'"></td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>
